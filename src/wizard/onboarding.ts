@@ -15,6 +15,12 @@ import {
 import type { RuntimeEnv } from "../runtime.js";
 import { defaultRuntime } from "../runtime.js";
 import { resolveUserPath } from "../utils.js";
+import type { SmbContext } from "./onboarding-smb.js";
+import {
+  applySmbHeartbeatConfig,
+  gatherSmbContext,
+  writeSmbUserProfile,
+} from "./onboarding-smb.js";
 import type { QuickstartGatewayDefaults, WizardFlow } from "./onboarding.types.js";
 import { WizardCancelledError, type WizardPrompter } from "./prompts.js";
 
@@ -28,40 +34,25 @@ async function requireRiskAcknowledgement(params: {
 
   await params.prompter.note(
     [
-      "Security warning — please read.",
+      "Quick heads-up before we get started.",
       "",
-      "OpenClaw is a hobby project and still in beta. Expect sharp edges.",
-      "By default, OpenClaw is a personal agent: one trusted operator boundary.",
-      "This bot can read files and run actions if tools are enabled.",
-      "A bad prompt can trick it into doing unsafe things.",
+      "Clark is a personal AI assistant that runs on your machine.",
+      "It can read files and take actions using tools you enable.",
+      "It’s designed for one trusted operator — you.",
       "",
-      "OpenClaw is not a hostile multi-tenant boundary by default.",
-      "If multiple users can message one tool-enabled agent, they share that delegated tool authority.",
+      "Keep in mind:",
+      "- Clark has access to tools and files you give it.",
+      "- Don’t share your agent with untrusted users without proper access controls.",
+      "- Keep sensitive credentials out of the agent’s workspace.",
       "",
-      "If you’re not comfortable with security hardening and access control, don’t run OpenClaw.",
-      "Ask someone experienced to help before enabling tools or exposing it to the internet.",
-      "",
-      "Recommended baseline:",
-      "- Pairing/allowlists + mention gating.",
-      "- Multi-user/shared inbox: split trust boundaries (separate gateway/credentials, ideally separate OS users/hosts).",
-      "- Sandbox + least-privilege tools.",
-      "- Shared inboxes: isolate DM sessions (`session.dmScope: per-channel-peer`) and keep tool access minimal.",
-      "- Keep secrets out of the agent’s reachable filesystem.",
-      "- Use the strongest available model for any bot with tools or untrusted inboxes.",
-      "",
-      "Run regularly:",
-      "openclaw security audit --deep",
-      "openclaw security audit --fix",
-      "",
-      "Must read: https://docs.openclaw.ai/gateway/security",
+      "More info: https://docs.openclaw.ai/gateway/security",
     ].join("\n"),
     "Security",
   );
 
   const ok = await params.prompter.confirm({
-    message:
-      "I understand this is personal-by-default and shared/multi-user use requires lock-down. Continue?",
-    initialValue: false,
+    message: "I understand Clark runs locally and has access to tools I enable. Continue?",
+    initialValue: true,
   });
   if (!ok) {
     throw new WizardCancelledError("risk not accepted");
@@ -75,7 +66,7 @@ export async function runOnboardingWizard(
 ) {
   const onboardHelpers = await import("../commands/onboard-helpers.js");
   onboardHelpers.printWizardHeader(runtime);
-  await prompter.intro("OpenClaw onboarding");
+  await prompter.intro("Clark — Business Assistant Setup");
   await requireRiskAcknowledgement({ opts, prompter });
 
   const snapshot = await readConfigFileSnapshot();
@@ -329,6 +320,9 @@ export async function runOnboardingWizard(
     return;
   }
 
+  // Gather business context (after config validation and remote gateway early-return)
+  const smbContext: SmbContext = await gatherSmbContext(prompter);
+
   const workspaceInput =
     opts.workspace ??
     (flow === "quickstart"
@@ -437,12 +431,18 @@ export async function runOnboardingWizard(
     });
   }
 
+  // Apply SMB heartbeat config (30m interval with active hours)
+  nextConfig = applySmbHeartbeatConfig(nextConfig, smbContext);
+
   await writeConfigFile(nextConfig);
   const { logConfigUpdated } = await import("../config/logging.js");
   logConfigUpdated(runtime);
   await onboardHelpers.ensureWorkspaceAndSessions(workspaceDir, runtime, {
     skipBootstrap: Boolean(nextConfig.agents?.defaults?.skipBootstrap),
   });
+
+  // Write business context to USER.md (overwrites the template with populated data)
+  await writeSmbUserProfile(workspaceDir, smbContext);
 
   if (opts.skipSkills) {
     await prompter.note("Skipping skills setup.", "Skills");

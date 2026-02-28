@@ -297,7 +297,12 @@ describe("runOnboardingWizard", () => {
       prompter,
     );
 
-    expect(select).not.toHaveBeenCalled();
+    // select is called by SMB context gathering (business stage, revenue, team size),
+    // but should NOT be called for onboarding flow selection (quickstart/manual)
+    const flowSelects = (
+      select as unknown as { mock: { calls: Array<[{ message: string }]> } }
+    ).mock.calls.filter((call) => call[0]?.message === "Onboarding mode");
+    expect(flowSelects).toHaveLength(0);
     expect(setupChannels).not.toHaveBeenCalled();
     expect(setupSkills).not.toHaveBeenCalled();
     expect(healthCommand).not.toHaveBeenCalled();

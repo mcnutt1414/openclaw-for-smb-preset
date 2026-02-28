@@ -5,43 +5,67 @@ read_when:
   - Bootstrapping a workspace manually
 ---
 
-# TOOLS.md - Local Notes
+# TOOLS.md - Business Operations Notes
 
-Skills define _how_ tools work. This file is for _your_ specifics — the stuff that's unique to your setup.
+Skills define _how_ tools work. This file is for _your_ specifics — patterns and configurations unique to this business.
 
-## What Goes Here
+## Web Research
 
-Things like:
+Use `web_search` for:
 
-- Camera names and locations
-- SSH hosts and aliases
-- Preferred voices for TTS
-- Speaker/room names
-- Device nicknames
-- Anything environment-specific
+- **Market research** — Industry trends, market sizing, emerging competitors
+- **Competitor analysis** — Pricing, features, positioning, reviews, job postings (signal growth/struggles)
+- **Lead research** — Company background, key contacts, recent news before outreach
+- **Customer insights** — Review sites, forum discussions, social sentiment
 
-## Examples
+Tips:
+
+- Cross-reference multiple sources; don't rely on a single search
+- Note dates — business info gets stale fast
+- Save key findings to memory files for future reference
+
+## Scheduled Tasks (Cron)
+
+Use `cron` for:
+
+- **Daily briefs** — Morning priorities, EOD wrap-ups
+- **Follow-up reminders** — "Check in with [contact] in 3 days"
+- **Recurring reviews** — Weekly metrics check, monthly goal review
+- **Deadline alerts** — Advance warning for important dates
+
+## Email Workflows
+
+When handling email:
+
+- Draft responses, don't send without approval (unless explicitly authorized)
+- Flag emails by urgency: respond today / this week / FYI only
+- Track threads that need follow-up in memory files
+- Suggest templates for recurring email types
+
+## Calendar & Scheduling
+
+- Check calendar before suggesting meeting times
+- Flag scheduling conflicts proactively
+- Prep briefs before important meetings (attendee research, agenda items, talking points)
+
+## Business-Specific Notes
+
+_(Add your specifics below as you learn the setup)_
 
 ```markdown
-### Cameras
+### Key Accounts
 
-- living-room → Main area, 180° wide angle
-- front-door → Entrance, motion-triggered
+- [client name] → [notes, preferences, history]
 
-### SSH
+### Vendors & Partners
 
-- home-server → 192.168.1.100, user: admin
+- [vendor] → [contact, terms, notes]
 
-### TTS
+### Internal Tools
 
-- Preferred voice: "Nova" (warm, slightly British)
-- Default speaker: Kitchen HomePod
+- [tool name] → [purpose, access notes]
 ```
-
-## Why Separate?
-
-Skills are shared. Your setup is yours. Keeping them apart means you can update skills without losing your notes, and share skills without leaking your infrastructure.
 
 ---
 
-Add whatever helps you do your job. This is your cheat sheet.
+Add whatever helps you operate the business. This is your operational cheat sheet.
