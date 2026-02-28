@@ -27,6 +27,7 @@ import {
 } from "./controllers/exec-approval.ts";
 import { loadNodes } from "./controllers/nodes.ts";
 import { loadSessions } from "./controllers/sessions.ts";
+import { startWizard, type WizardHost } from "./controllers/wizard.ts";
 import {
   resolveGatewayErrorDetailCode,
   type GatewayEventFrame,
@@ -43,7 +44,7 @@ import type {
   UpdateAvailable,
 } from "./types.ts";
 
-type GatewayHost = {
+type GatewayHost = WizardHost & {
   settings: UiSettings;
   password: string;
   clientInstanceId: string;
@@ -52,7 +53,7 @@ type GatewayHost = {
   hello: GatewayHelloOk | null;
   lastError: string | null;
   lastErrorCode: string | null;
-  onboarding?: boolean;
+  onboarding: boolean;
   eventLogBuffer: EventLogEntry[];
   eventLog: EventLogEntry[];
   tab: Tab;
@@ -173,6 +174,10 @@ export function connectGateway(host: GatewayHost) {
       void loadNodes(host as unknown as OpenClawApp, { quiet: true });
       void loadDevices(host as unknown as OpenClawApp, { quiet: true });
       void refreshActiveTab(host as unknown as Parameters<typeof refreshActiveTab>[0]);
+      // Auto-start onboarding wizard if in onboarding mode.
+      if (host.onboarding && !host.wizardComplete && host.wizardStatus === "idle") {
+        void startWizard(host);
+      }
     },
     onClose: ({ code, reason, error }) => {
       if (host.client !== client) {

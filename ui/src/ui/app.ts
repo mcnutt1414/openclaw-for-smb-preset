@@ -58,6 +58,13 @@ import type { DevicePairingList } from "./controllers/devices.ts";
 import type { ExecApprovalRequest } from "./controllers/exec-approval.ts";
 import type { ExecApprovalsFile, ExecApprovalsSnapshot } from "./controllers/exec-approvals.ts";
 import type { SkillMessage } from "./controllers/skills.ts";
+import {
+  startWizard as startWizardInternal,
+  submitWizardStep as submitWizardStepInternal,
+  cancelWizard as cancelWizardInternal,
+  type WizardStep,
+  type WizardHost,
+} from "./controllers/wizard.ts";
 import type { GatewayBrowserClient, GatewayHelloOk } from "./gateway.ts";
 import type { Tab } from "./navigation.ts";
 import { loadSettings, type UiSettings } from "./storage.ts";
@@ -121,6 +128,13 @@ export class OpenClawApp extends LitElement {
   @state() password = "";
   @state() tab: Tab = "chat";
   @state() onboarding = resolveOnboardingMode();
+  @state() wizardSessionId: string | null = null;
+  @state() wizardStep: WizardStep | null = null;
+  @state() wizardStatus: "idle" | "running" | "done" | "cancelled" | "error" = "idle";
+  @state() wizardError: string | null = null;
+  @state() wizardLoading = false;
+  @state() wizardStepIndex = 0;
+  @state() wizardComplete = false;
   @state() connected = false;
   @state() theme: ThemeMode = this.settings.theme ?? "system";
   @state() themeResolved: ResolvedTheme = "dark";
@@ -608,6 +622,27 @@ export class OpenClawApp extends LitElement {
     const newRatio = Math.max(0.4, Math.min(0.7, ratio));
     this.splitRatio = newRatio;
     this.applySettings({ ...this.settings, splitRatio: newRatio });
+  }
+
+  async startWizard() {
+    await startWizardInternal(this as unknown as WizardHost);
+  }
+
+  async submitWizardStep(stepId: string, value: unknown) {
+    await submitWizardStepInternal(this as unknown as WizardHost, stepId, value);
+  }
+
+  async cancelWizard() {
+    await cancelWizardInternal(this as unknown as WizardHost);
+  }
+
+  completeWizard() {
+    this.wizardComplete = true;
+    this.onboarding = false;
+    // Remove ?onboarding from URL
+    const url = new URL(window.location.href);
+    url.searchParams.delete("onboarding");
+    window.history.replaceState({}, "", url.toString());
   }
 
   render() {

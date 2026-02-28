@@ -36,12 +36,12 @@ async function requireRiskAcknowledgement(params: {
     [
       "Quick heads-up before we get started.",
       "",
-      "Clark is a personal AI assistant that runs on your machine.",
-      "It can read files and take actions using tools you enable.",
-      "It’s designed for one trusted operator — you.",
+      "Clark is your AI business assistant that runs on a secure hosted VM.",
+      "Your local data stays safe — Clark only accesses files and tools",
+      "within its own workspace on the VM.",
       "",
       "Keep in mind:",
-      "- Clark has access to tools and files you give it.",
+      "- Clark has access to tools and files you enable in its workspace.",
       "- Don’t share your agent with untrusted users without proper access controls.",
       "- Keep sensitive credentials out of the agent’s workspace.",
       "",
@@ -51,7 +51,7 @@ async function requireRiskAcknowledgement(params: {
   );
 
   const ok = await params.prompter.confirm({
-    message: "I understand Clark runs locally and has access to tools I enable. Continue?",
+    message: "I understand Clark runs on a hosted VM and has access to tools I enable. Continue?",
     initialValue: true,
   });
   if (!ok) {
@@ -292,7 +292,7 @@ export async function runOnboardingWizard(
           options: [
             {
               value: "local",
-              label: "Local gateway (this machine)",
+              label: "Gateway on this server",
               hint: localProbe.ok
                 ? `Gateway reachable (${localUrl})`
                 : `No gateway detected (${localUrl})`,

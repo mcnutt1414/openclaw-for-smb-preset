@@ -1,0 +1,443 @@
+/* ===========================================
+   Wizard - Onboarding Flow
+   =========================================== */
+
+.wizard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 24px;
+  animation: fade-in 0.3s var(--ease-out);
+}
+
+.wizard__container {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Header / Brand */
+.wizard__header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wizard__brand {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.wizard__brand-name {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-strong);
+}
+
+.wizard__brand-sub {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+/* Progress bar */
+.wizard__progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wizard__progress-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.wizard__progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: var(--radius-full);
+  transition: width 0.4s var(--ease-out);
+}
+
+.wizard__progress-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* Body */
+.wizard__body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Step content */
+.wizard__step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: rise 0.3s var(--ease-out);
+}
+
+.wizard__step-content--progress {
+  align-items: center;
+  padding: 40px 0;
+}
+
+.wizard__step-title {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+  line-height: 1.3;
+  margin: 0;
+}
+
+.wizard__step-message {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Option cards (select / multiselect) */
+.wizard__options {
+  display: grid;
+  gap: 8px;
+}
+
+.wizard__options--multi {
+  gap: 8px;
+}
+
+.wizard__card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color var(--duration-fast) ease,
+    background var(--duration-fast) ease,
+    box-shadow var(--duration-fast) ease;
+}
+
+.wizard__card:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-hover);
+}
+
+.wizard__card:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+.wizard__card--selected {
+  border-color: var(--accent);
+  background: var(--accent-subtle);
+}
+
+.wizard__card--selected:hover {
+  border-color: var(--accent-hover);
+}
+
+.wizard__card-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  transition:
+    border-color var(--duration-fast) ease,
+    background var(--duration-fast) ease;
+}
+
+.wizard__card--selected .wizard__card-check {
+  border-color: var(--accent);
+  background: var(--accent-subtle);
+}
+
+.wizard__card-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-strong);
+  line-height: 1.4;
+}
+
+.wizard__card-hint {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Text input */
+.wizard__text-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wizard__input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-strong);
+  transition:
+    border-color var(--duration-fast) ease,
+    box-shadow var(--duration-fast) ease;
+}
+
+.wizard__input::placeholder {
+  color: var(--muted);
+}
+
+.wizard__input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+/* Action buttons */
+.wizard__actions {
+  display: flex;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.wizard__actions--confirm {
+  gap: 12px;
+}
+
+.wizard__btn-next {
+  padding: 10px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+}
+
+.wizard__btn-secondary {
+  padding: 10px 28px;
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) ease,
+    border-color var(--duration-fast) ease;
+}
+
+.wizard__btn-secondary:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-hover);
+}
+
+/* Error */
+.wizard__error {
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--danger);
+  background: var(--danger-subtle);
+  border: 1px solid var(--danger-muted);
+  border-radius: var(--radius-md);
+}
+
+/* Loading overlay */
+.wizard__loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-lg);
+  pointer-events: all;
+  cursor: wait;
+}
+
+/* Spinner */
+.wizard__spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: wizard-spin 0.7s linear infinite;
+}
+
+@keyframes wizard-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===========================================
+   Landing Page
+   =========================================== */
+
+.wizard__landing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  text-align: center;
+  max-width: 480px;
+  animation: scale-in 0.4s var(--ease-out);
+}
+
+.wizard__landing-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wizard__landing-title {
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--text-strong);
+  margin: 0;
+  line-height: 1;
+}
+
+.wizard__landing-tagline {
+  font-size: 16px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.wizard__landing-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.wizard__landing-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.wizard__landing-feature-icon {
+  color: var(--accent);
+  font-size: 8px;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.wizard__btn-start {
+  padding: 12px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+}
+
+.wizard__landing-status {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* ===========================================
+   Completion Page
+   =========================================== */
+
+.wizard__complete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  max-width: 400px;
+  animation: scale-in 0.4s var(--ease-out);
+}
+
+.wizard__complete-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: var(--ok);
+  background: var(--ok-subtle);
+  border-radius: 50%;
+  margin-bottom: 8px;
+}
+
+.wizard__complete-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-strong);
+  margin: 0;
+}
+
+.wizard__complete-message {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* ===========================================
+   Responsive
+   =========================================== */
+
+@media (max-width: 600px) {
+  .wizard {
+    padding: 16px;
+  }
+
+  .wizard__landing-title {
+    font-size: 32px;
+  }
+
+  .wizard__step-title {
+    font-size: 18px;
+  }
+
+  .wizard__btn-start {
+    width: 100%;
+  }
+
+  .wizard__btn-next {
+    width: 100%;
+  }
+
+  .wizard__actions {
+    flex-direction: column;
+  }
+
+  .wizard__btn-secondary {
+    width: 100%;
+  }
+}
